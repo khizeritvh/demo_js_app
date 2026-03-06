@@ -25,9 +25,6 @@ pipeline {
         }
 
         stage('Deploy with Docker Compose') {
-            when {
-                branch 'main'
-            }
             steps {
                 sh '''
                   docker compose -f ./docker-testapp-main/compose.yml down || true

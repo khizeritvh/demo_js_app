@@ -1,5 +1,4 @@
 version: "3.9"
-
 services:
   mongo:
     image: mongo
@@ -26,14 +25,11 @@ services:
       - mongo
 
   node:
-    image: node:24-alpine
+    image: demo_node_app:latest   # ✅ use your built image
     container_name: node_app
-    working_dir: /app
-    volumes:
-      - .:/app
+    restart: always
     ports:
       - "5050:5050"
-    command: sh -c "npm install && node server.js"
     environment:
       MONGO_URL: mongodb://admin:qwerty@mongo:27017/?authSource=admin
     depends_on:

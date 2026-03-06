@@ -1,17 +1,16 @@
-# use official Node image as the base image
 FROM node:24-alpine
 
-# set the working directory in the container
 WORKDIR /app
 
-# install dependencies
+# copy package.json first
+COPY package*.json ./
+
+# now install dependencies
 RUN npm install
 
-# copy the whole project into the container
+# copy rest of the project
 COPY . .
 
-# expose the port that the app will run on
 EXPOSE 5050
 
-# start the application
 CMD ["node", "server.js"]

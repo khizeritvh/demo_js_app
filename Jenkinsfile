@@ -12,27 +12,35 @@ pipeline {
             }
         }
 
-        stage('Build Docker image') {
-            steps {
-                sh "docker build -t ${IMAGE_NAME}:latest ."
-            }
-        }
-
-        stage('Test Docker'){
+        stage('Test Docker') {
             steps {
                 sh 'docker version'
             }
         }
 
+        stage('Build Docker Image') {
+            steps {
+                // Dockerfile is inside docker-testapp-main/
+                sh "docker build -t ${IMAGE_NAME}:latest ./docker-testapp-main"
+            }
+        }
+
         stage('Deploy with Docker Compose') {
             when {
-                branch 'master'   // or 'main' if your default branch is main
+                branch 'master'
             }
             steps {
+                // compose.yml is inside docker-testapp-main/
                 sh '''
-                  docker compose down || true
-                  docker compose up -d --build
+                  docker compose -f ./docker-testapp-main/compose.yml down || true
+                  docker compose -f ./docker-testapp-main/compose.yml up -d --build
                 '''
+            }
+        }
+
+        stage('Cleanup') {
+            steps {
+                deleteDir()
             }
         }
     }

@@ -20,28 +20,26 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                // Dockerfile is inside docker-testapp-main/
                 sh "docker build -t ${IMAGE_NAME}:latest ./docker-testapp-main"
             }
         }
 
         stage('Deploy with Docker Compose') {
             when {
-                branch 'master'
+                branch 'main'
             }
             steps {
-                // compose.yml is inside docker-testapp-main/
                 sh '''
                   docker compose -f ./docker-testapp-main/compose.yml down || true
                   docker compose -f ./docker-testapp-main/compose.yml up -d --build
                 '''
             }
         }
+    }
 
-        stage('Cleanup') {
-            steps {
-                deleteDir()
-            }
+    post {
+        always {
+            cleanWs()  // ← safe cleanup after pipeline finishes
         }
     }
 }

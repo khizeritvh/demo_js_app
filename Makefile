@@ -1,5 +1,6 @@
 up:
 	docker start jenkins
+	docker compose -f ./docker-testapp-main/compose.yml up -d
 
 down:
 	docker compose -f ./docker-testapp-main/compose.yml down
